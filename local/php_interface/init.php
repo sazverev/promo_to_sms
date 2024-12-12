@@ -4,13 +4,6 @@ AddEventHandler("main", "OnAfterUserAdd", "SendPromoCodeToNewUser");
 function SendPromoCodeToNewUser(&$arFields) {
     if (intval($arFields["ID"]) > 0) {
         $phoneNumber = $arFields["PERSONAL_PHONE"];
-
-        // Проверка формата номера телефона
-        if (!ValidatePhoneNumber($phoneNumber)) {
-            AddMessage2Log("Неверный формат номера телефона: " . $phoneNumber);
-            return; // Прекращаем выполнение, если формат неверный
-        }
-
         // Генерация уникального промокода
         $promoCode = "PROMO" . rand(1000, 9999);
 
@@ -21,13 +14,6 @@ function SendPromoCodeToNewUser(&$arFields) {
         // Отправка СМС через API
         SendSms($phoneNumber, "Ваш промокод: $promoCode. Дает скидку 10% на одну покупку.");
     }
-}
-
-// Функция проверки формата номера телефона
-function ValidatePhoneNumber($phoneNumber) {
-    // Регулярное выражение для проверки форматов 914, 7914, 8914
-    $pattern = '/^(\+7|7|8)?(914)\d{7}$/';
-    return preg_match($pattern, $phoneNumber);
 }
 
 // Функция отправки СМС через cURL
